@@ -93,7 +93,7 @@ const LEAFLET_CSS = `
 export default function SentinelDashboard() {
   const [activeTab,      setActiveTab]      = useState('dashboard');
   const [sidebarOpen,    setSidebarOpen]    = useState(true);
-  const [isSimulating,   setIsSimulating]   = useState(true);
+  const [isSimulating] = useState(true);
   const [cameras,        setCameras]        = useState(MOCK_CAMERAS);
   const [alertLog,       setAlertLog]       = useState([]);
   const [threshold,      setThreshold]      = useState(0.75);
@@ -896,13 +896,17 @@ export default function SentinelDashboard() {
 
 // ─── HEATMAP (extracted + memoised to fix Math.random() on every render) ──────
 function HeatmapStrip({ analysisResult }) {
-  // [FIX] useMemo — only regenerates when a new analysis result arrives
+  // [FIX] useMemo — only regenerates when analysis result changes
+  const analysisKey = analysisResult
+    ? `${analysisResult.confidence}-${analysisResult.classification}`
+    : 'empty';
   const heatmapData = useMemo(() => (
     Array.from({ length: 60 }, (_, i) => {
       const isHot = i > 18 && i < 38;
       return Math.min(1, (isHot ? 0.7 : 0.1) + Math.random() * 0.3);
     })
-  ), [analysisResult]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  ), [analysisKey]);
 
   return (
     <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-lg">
