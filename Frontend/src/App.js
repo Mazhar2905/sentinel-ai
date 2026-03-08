@@ -93,7 +93,7 @@ const LEAFLET_CSS = `
 export default function SentinelDashboard() {
   const [activeTab,      setActiveTab]      = useState('dashboard');
   const [sidebarOpen,    setSidebarOpen]    = useState(true);
-  const [isSimulating] = useState(true);
+  const [isSimulating, setIsSimulating] = useState(true);
   const [cameras,        setCameras]        = useState(MOCK_CAMERAS);
   const [alertLog,       setAlertLog]       = useState([]);
   const [threshold,      setThreshold]      = useState(0.75);
@@ -906,7 +906,7 @@ function HeatmapStrip({ analysisResult }) {
       return Math.min(1, (isHot ? 0.7 : 0.1) + Math.random() * 0.3);
     })
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  ), [analysisKey]);
+  ), [analysisResult]);
 
   return (
     <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-lg">
