@@ -153,10 +153,12 @@ def load_model() -> None:
         if not os.path.exists(MODEL_PATH):
             os.makedirs("model", exist_ok=True)
             log.info("📥 Downloading model from Google Drive...")
+            FILE_ID = os.getenv("GOOGLE_DRIVE_FILE_ID", "1sm9sBUdFNcQu85qfno-0sazlPobfPYjR/")
             gdown.download(
-                f"https://drive.google.com/uc?id=1sm9sBUdFNcQu85qfno-0sazlPobfPYjR",
+                f"https://drive.google.com/uc?id=1sm9sBUdFNcQu85qfno-0sazlPobfPYjR/",
                 MODEL_PATH,
-                quiet=False
+                quiet=False,
+                fuzzy=True
             )
             log.info("✅ Model downloaded successfully!")
     except FileNotFoundError:
