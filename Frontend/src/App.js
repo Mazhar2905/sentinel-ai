@@ -37,8 +37,8 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
  */
 
 // ─── ENV CONFIG ──────────────────────────────────────────────────────────────
-const API_URL = process.env.REACT_APP_API_URL || "http://localhost:8000";
-const WS_URL  = process.env.REACT_APP_WS_URL  || "ws://localhost:8000";
+const API_URL = "https://sentinel-ai-6y3w.onrender.com";
+const WS_URL  = "wss://sentinel-ai-6y3w.onrender.com";
 
 // ─── MOCK DATA ────────────────────────────────────────────────────────────────
 const MOCK_CAMERAS = [
