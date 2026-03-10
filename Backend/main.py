@@ -149,24 +149,52 @@ model:  ViolenceDetectionModel | None = None
 def load_model() -> None:
     global model
     try:
-        # ── Auto-download model if not present ──────────────────
         if not os.path.exists(MODEL_PATH):
             os.makedirs("model", exist_ok=True)
-            log.info("📥 Downloading model from Google Drive...")
-            FILE_ID = os.getenv("GOOGLE_DRIVE_FILE_ID", "1sm9sBUdFNcQu85qfno-0sazlPobfPYjR/")
-            gdown.download(
-                f"https://drive.google.com/uc?id=1sm9sBUdFNcQu85qfno-0sazlPobfPYjR/",
-                MODEL_PATH,
-                quiet=False,
-                fuzzy=True
+            log.info("📥 Downloading model from Hugging Face...")
+            
+            import requests
+            HF_URL = os.getenv(
+                "MODEL_DOWNLOAD_URL",
+                "https://huggingface.co/Mazhar2905/sentinel-violence-detector/blob/main/best_violence_detector.pth"
             )
-            log.info("✅ Model downloaded successfully!")
+            
+            response = requests.get(HF_URL, stream=True, timeout=300)
+            response.raise_for_status()
+            
+            total = int(response.headers.get('content-length', 0))
+            downloaded = 0
+            
+            with open(MODEL_PATH, 'wb') as f:
+                for chunk in response.iter_content(chunk_size=8192):
+                    f.write(chunk)
+                    downloaded += len(chunk)
+            
+            log.info(f"✅ Model downloaded! Size: {downloaded/1024/1024:.1f} MB")
+        
+        # Verify file size
+        file_size = os.path.getsize(MODEL_PATH)
+        if file_size < 1024 * 1024:
+            log.error(f"❌ File too small: {file_size} bytes — corrupt download")
+            os.remove(MODEL_PATH)
+            return
+            
+        log.info(f"Loading model on {device} from '{MODEL_PATH}' ...")
+        m = ViolenceDetectionModel()
+        checkpoint = torch.load(MODEL_PATH, map_location=device, weights_only=False)
+        state_dict = (checkpoint["model_state_dict"]
+                      if isinstance(checkpoint, dict) and "model_state_dict" in checkpoint
+                      else checkpoint)
+        m.load_state_dict(state_dict)
+        m.to(device)
+        m.eval()
+        model = m
+        log.info("✅ Model loaded successfully!")
+        
     except FileNotFoundError:
-        log.error(f"❌ Model file not found: '{MODEL_PATH}'. "
-                  "Place 'best_violence_detector.pth' inside the 'model/' folder.")
+        log.error(f"❌ Model file not found: '{MODEL_PATH}'")
     except Exception as exc:
         log.exception(f"❌ Failed to load model: {exc}")
-
 
 # ══════════════════════════════════════════════════════════════════════════════
 # [FIX] Modern lifespan replaces deprecated @app.on_event("startup")
