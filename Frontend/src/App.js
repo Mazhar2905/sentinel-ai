@@ -37,8 +37,8 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
  */
 
 // ─── ENV CONFIG ──────────────────────────────────────────────────────────────
-const API_URL = "https://sentinel-ai-6y3w.onrender.com";
-const WS_URL  = "wss://sentinel-ai-6y3w.onrender.com";
+const API_URL = "https://overcareless-sabina-unhesitatingly.ngrok-free.dev";
+const WS_URL  = "wss://overcareless-sabina-unhesitatingly.ngrok-free.dev";
 
 // ─── MOCK DATA ────────────────────────────────────────────────────────────────
 const MOCK_CAMERAS = [
