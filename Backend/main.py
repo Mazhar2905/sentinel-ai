@@ -156,7 +156,7 @@ def load_model() -> None:
             import requests
             HF_URL = os.getenv(
                 "MODEL_DOWNLOAD_URL",
-                "https://huggingface.co/Mazhar2905/sentinel-violence-detector/blob/main/best_violence_detector.pth"
+                "https://huggingface.co/Mazhar2905/sentinel-violence-detector/resolve/main/best_violence_detector.pth"
             )
             
             response = requests.get(HF_URL, stream=True, timeout=300)
