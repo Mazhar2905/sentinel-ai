@@ -15,7 +15,6 @@ Changelog vs original:
 
 # ─── STDLIB ───────────────────────────────────────────────────────────────────
 import os
-import gdown
 import json
 import logging
 import smtplib
